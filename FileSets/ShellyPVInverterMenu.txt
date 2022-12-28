@@ -1,0 +1,8 @@
+//////// added for ShellyPVInverter
+		MbSubMenu
+		{
+			description: qsTr("Shelly PV Inverters")
+			subpage: Component { PageSettingsPackageManager {} }
+		}
+	}
+}
