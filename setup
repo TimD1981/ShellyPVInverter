@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# setup Rasperry Pi Temprature mechanism
+# setup ShellyPVInverter mechanism
 # This modification adds the ShellyPVInverter to Victron Venus OS
 
 # Venus files that need to be updated to activeate this package
@@ -10,7 +10,7 @@ packageLogFile="/var/log/ShellyPVInverter/current"
 
 #### following lines incorporate SetupHelper utilities into this script
 # Refer to the SetupHelper ReadMe file for details.
-    
+
 source "/data/SetupHelper/CommonResources"
 
 #### end of lines to include SetupHelper
@@ -18,7 +18,7 @@ source "/data/SetupHelper/CommonResources"
 #### running manually and OK to proceed - prompt for input
 if [ $scriptAction == 'NONE' ] ; then
     echo
-    echo "The ShellyPVInverter adds Shelly 1PM as PV inverter"    
+    echo "The ShellyPVInverter adds Shelly 1PM as PV inverter"
     echo
     standardActionPrompt
 fi
@@ -27,28 +27,6 @@ fi
 
 if [ $scriptAction == 'INSTALL' ] ; then
     logMessage "++ Installing ShellyPVInverter"
-	
-	# modify PageSettings here so SetupHelper is independent of Venus OS verison
-	if [ -f "$qmlDir/PageSettings.qml.orig" ]; then
-		origFile="$qmlDir/PageSettings.qml.orig"
-	else
-		origFile="$qmlDir/PageSettings.qml"
-	fi
-	if (( $(grep -c "ShellyPVInverter" $origFile) > 0)); then
-		logMessage "ERROR: PageSettings.qml already modified for ShellyPVInverter -- skipping that modification"
-	else
-		rm -f "/var/volatile/tmp/PageSettings.qml"
-		echo "//////// modified to insert ShellyPVInverter menu" > "/var/volatile/tmp/PageSettings.qml"
-		# find line with second to last }
-		insertBefore=$(awk '{print NR  " " $s}' "$origFile" | grep '}' | tail -2 | head -n 1 | awk '{print $1}')
-		((insertBefore -= 1))
-		# include all lines before that one
-		head -n $insertBefore $origFile >> "/var/volatile/tmp/PageSettings.qml"
-		# file with ShellyPVInverter menu code includes the last two }
-		cat "$pkgFileSets/ShellyPVInverterMenu.txt" >> "/var/volatile/tmp/PageSettings.qml"
-		updateActiveFile "/var/volatile/tmp/PageSettings.qml" "$qmlDir/PageSettings.qml"
-		rm -f "/var/volatile/tmp/PageSettings.qml"
-	fi
 
     # updateActiveFile "$qmlDir/PageSettingsGeneral.qml"
     # updateActiveFile "$qmlDir/PageSettingsShutdown.qml"
@@ -64,13 +42,10 @@ fi
 # if an install step failed package needs to be removed
 if [ $scriptAction == 'UNINSTALL' ] ; then
     logMessage "++ Uninstalling ShellyPVInverter"
-    
-	restoreActiveFile "$qmlDir/PageSettings.qml"
 
-    # restoreActiveFile "$qmlDir/PageSettingsGeneral.qml"
-    # restoreActiveFile "$qmlDir/PageSettingsShutdown.qml"
-    
-	removeService $packageName
+
+
+        removeService $packageName
 fi
 
 if $filesUpdated ; then
