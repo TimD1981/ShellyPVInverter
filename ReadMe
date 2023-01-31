@@ -1,0 +1,16 @@
+Add Shelly 1PM to Victron OS as PV Inverter.
+
+It is possible to set a custom name for the shelly pv inverter. 
+
+After installation of the package, please vonnect via ssh and change to directory /data/ShellyPVInverter
+
+edit the config.ini
+
+Setup:
+ShellyPVInverter requires that SetupHelper is installed first.
+
+The easiest way to install ShellyPVInverter is to do a "blind install" of SetupHelper and then add the ShellyPVInverter package
+via the PackageManager menus.
+
+Refer to SetupHelper here:
+https://github.com/kwindrem/SetupHelper
